@@ -63,26 +63,12 @@ are utilized:
 ## Flowchart
 
 ```mermaid
-graph TD
-  subgraph Start
-    startRecovery
-  end
-
-  startRecovery -->|Recovery Started| RecoveryStartVerified
-  RecoveryStartVerified -->|VETO_RECOVERY_PERMISSION_ID| VetoRecovery
-  VetoRecovery -->|Veto Successful?| ResetRecovery{No}
-  ResetRecovery -->|Yes| startRecovery
-  ResetRecovery -->|No| SetActions
-  SetActions -->|Actions Set| finalizeRecovery
-  finalizeRecovery -->|Actions Executed| ActionsExecuted
-
-  style Start fill:#86C7F3
-  style RecoveryStartVerified fill:#86C7F3
-  style VetoRecovery fill:#86C7F3
-  style ResetRecovery fill:#F38181
-  style SetActions fill:#86C7F3
-  style finalizeRecovery fill:#86C7F3
-  style ActionsExecuted fill:#AED581
+flowchart LR
+    Start --> startRecovery
+    startRecovery --> startVetoPeriod
+    startVetoPeriod{Is vetoed} -- Yes --> reset
+    startVetoPeriod{Is vetoed} -- No --> executeActions
+    executeActions --> Stop
 ```
 
 ## License
