@@ -19,9 +19,14 @@ contract RecoveryPlugin is PluginCloneable {
 
     error RecoveryStarted();
     error RecoveryNotFinalized();
+    error InvalidVetoDuration();
 
     function initialize(IDAO _dao, uint128 _vetoDuration, IDAO.Action[] calldata _actions) external initializer {
         __PluginCloneable_init(_dao);
+        if (_vetoDuration < 1 days) {
+            revert InvalidVetoDuration();
+        }
+
         vetoDuration = _vetoDuration;
         _setActions(_actions);
     }
@@ -51,6 +56,9 @@ contract RecoveryPlugin is PluginCloneable {
     }
 
     function setVetoDuration(uint128 _vetoDuration) external auth(UPDATE_VETO_PERIOD_ID) {
+        if (_vetoDuration < 1 days) {
+            revert InvalidVetoDuration();
+        }
         vetoDuration = _vetoDuration;
     }
 
