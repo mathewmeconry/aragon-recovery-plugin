@@ -16,14 +16,12 @@ contract RecoveryPlugin is PluginCloneable {
     IDAO.Action[] public actions;
     uint128 public vetoDuration;
     uint128 public recoveryStart;
-    IDAO public dao;
 
     error RecoveryStarted();
     error RecoveryNotFinalized();
 
     function initialize(IDAO _dao, uint128 _vetoDuration, IDAO.Action[] calldata _actions) external initializer {
         __PluginCloneable_init(_dao);
-        dao = _dao;
         vetoDuration = _vetoDuration;
         _setActions(_actions);
     }
@@ -60,7 +58,7 @@ contract RecoveryPlugin is PluginCloneable {
         if (block.timestamp < recoveryStart + vetoDuration) {
             revert RecoveryNotFinalized();
         }
-        dao.execute(0, actions, 0);
+        dao().execute(0, actions, 0);
     }
 
     function supportsInterface(bytes4 _interfaceId) public view override(PluginCloneable) returns (bool) {
