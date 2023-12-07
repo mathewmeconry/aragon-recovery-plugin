@@ -32,6 +32,9 @@ contract RecoveryPlugin is PluginCloneable {
     }
 
     function startRecovery() external {
+        if (vetoDuration < 1 days) {
+            revert InvalidVetoDuration();
+        }
         if (recoveryStart != 0) {
             revert RecoveryStarted();
         }
